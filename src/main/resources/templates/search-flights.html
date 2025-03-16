@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Flight Details</title>
+    <link rel="stylesheet" href="search-flights.css">
+</head>
+<body>
+<div class="search-flight-details-container">
+    <h3>Available Flights</h3>
+    <div class="flight-list">
+        <div class="flight-card" th:each="flight : ${flights}">
+            <div class="flight-header" th:data-flight-id="${flight.id}">
+                <div class="middle-details">
+                    <p><strong>Flight Number:</strong> <span id="flightNumber" th:text="${flight.flightNumber}"></span></p>
+                </div>
+                <div class="flight-details-grid">
+                    <div class="left-details">
+                        <p><strong>From:</strong> <span id="flightSource" th:text="${flight.origin}"></span></p>
+                        <p><strong>Departure Date:</strong> <span id="flightDepartureDate" th:text="${flight.departureDate}"></span></p>
+                        <p><strong>Departure Time:</strong> <span id="flightDepartureTime" th:text="${flight.departureTime}"></span></p>
+                    </div>
+                    <div class="right-details">
+                        <p><strong>To:</strong> <span id="flightDestination" th:text="${flight.destination}"></span></p>
+                        <p><strong>Arrival Date:</strong> <span id="flightArrivalDate" th:text="${flight.arrivalDate}"></span></p>
+                        <p><strong>Arrival Time:</strong> <span id="flightArrivalTime" th:text="${flight.arrivalTime}"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="flight-details" style="display: none;">
+                <div class="class-details">
+                    <div class="class-option" th:if="${#lists.size(flight.economySeats) > 0}">
+                        <label>
+                            <input type="radio" name="class" value="economy" th:data-flight-id="${flight.id}"/>
+                            Economy: <span th:text="${flight.economyClassPrice}" style="display: none;"></span>
+                            <span th:text="${#lists.size(flight.economySeats)}"></span> seats available
+                        </label>
+                    </div>
+                    <div class="class-option" th:if="${#lists.size(flight.businessSeats) > 0}">
+                        <label>
+                            <input type="radio" name="class" value="business" th:data-flight-id="${flight.id}"/>
+                            Business: <span th:text="${flight.businessClassPrice}" style="display: none;"></span>
+                            <span th:text="${#lists.size(flight.businessSeats)}"></span> seats available
+                        </label>
+                    </div>
+                    <div class="class-option" th:if="${#lists.size(flight.firstClassSeats) > 0}">
+                        <label>
+                            <input type="radio" name="class" value="first" th:data-flight-id="${flight.id}"/>
+                            First Class: <span th:text="${flight.firstClassPrice}" style="display: none;"></span>
+                            <span th:text="${#lists.size(flight.firstClassSeats)}"></span> seats available
+                        </label>
+                    </div>
+                </div>
+
+
+                <form th:action="@{/book-tickets}" method="post">
+                    <input type="hidden" name="flightId" th:value="${flight.id}"/>
+                    <input type="hidden" name="selectedClass" value=""/>
+                    <button type="submit" class="book-button" style="display: none;">Book Ticket</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ... (rest of the JavaScript code) ...
+    document.addEventListener('DOMContentLoaded', function() {
+    const flightHeaders = document.querySelectorAll('.flight-header');
+
+    flightHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const flightDetails = this.nextElementSibling;
+            const isCurrentlyVisible = flightDetails.style.display === 'block';
+
+            flightHeaders.forEach(otherHeader => {
+                const otherDetails = otherHeader.nextElementSibling;
+                if (otherHeader !== header) {
+                    otherDetails.style.display = 'none';
+                }
+            });
+
+            flightDetails.style.display = isCurrentlyVisible ? 'none' : 'block';
+        });
+    });
+
+    const radioButtons = document.querySelectorAll('input[name="class"]');
+    let selectedRadioButton = null;
+
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const flightId = this.getAttribute('data-flight-id');
+            const selectedClass = this.value;
+            const form = this.closest('.flight-card').querySelector('form');
+            form.querySelector('input[name="selectedClass"]').value = selectedClass;
+
+            const price = this.closest('label').querySelector('span').textContent;
+            const bookButton = form.querySelector('.book-button');
+            bookButton.textContent = `Book Ticket (₹${price})`;
+            bookButton.style.display = 'inline-block';
+
+            if (selectedRadioButton && selectedRadioButton !== this) {
+                selectedRadioButton.checked = false;
+            }
+            selectedRadioButton = this;
+        });
+    });
+
+    // Hide Book buttons for flights with no available seats
+    const flightCards = document.querySelectorAll('.flight-card');
+    flightCards.forEach(card => {
+        const flightId = card.querySelector('.book-button').getAttribute('data-flight-id');
+        const economySeats = parseInt(card.querySelector('input[value="economy"]')?.closest('label').querySelector('span')?.textContent || 0);
+        const businessSeats = parseInt(card.querySelector('input[value="business"]')?.closest('label').querySelector('span')?.textContent || 0);
+        const firstSeats = parseInt(card.querySelector('input[value="first"]')?.closest('label').querySelector('span')?.textContent || 0);
+
+        if (economySeats === 0 && businessSeats === 0 && firstSeats === 0) {
+            card.querySelector('.book-button').style.display = 'none';
+        }
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Book Tickets</title>
+    <link rel="stylesheet" href="book-tickets.css">
+    <style>
+        #passenger-forms {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="booking-container">
+    <h2>Booking Details</h2>
+    <span id="userEmail" th:text="${userEmail}" style="display: none;"></span>
+    <span id="flightId" th:text="${flight.id}" style="display: none;"></span>
+
+    <div class="flight-info">
+        <h3>Flight Information</h3>
+        <div class="middle-details">
+            <p><strong>Flight Number:</strong> <span id="flightNumber" th:text="${flight.flightNumber}"></span></p>
+        </div>
+        <div class="flight-details-grid">
+            <div class="left-details">
+                <p><strong>From:</strong> <span id="flightSource" th:text="${flight.origin}"></span></p>
+                <p><strong>Departure Date:</strong> <span id="flightDepartureDate" th:text="${flight.departureDate}"></span></p>
+                <p><strong>Departure Time:</strong> <span id="flightDepartureTime" th:text="${flight.departureTime}"></span></p>
+            </div>
+            <div class="right-details">
+                <p><strong>To:</strong> <span id="flightDestination" th:text="${flight.destination}"></span></p>
+                <p><strong>Arrival Date:</strong> <span id="flightArrivalDate" th:text="${flight.arrivalDate}"></span></p>
+                <p><strong>Arrival Time:</strong> <span id="flightArrivalTime" th:text="${flight.arrivalTime}"></span></p>
+            </div>
+        </div>
+        <div class="middle-details">
+            <p><strong>Selected Class:</strong> <span id="selectedClass" th:text="${selectedClass}"></span></p>
+        </div>
+    </div>
+
+    <div class="passenger-details">
+        <h3>Passenger Details</h3>
+        <div id="passenger-forms">
+        </div>
+        <div class="button-container">
+            <button id="add-passenger-button" type="button">Add Passenger</button>
+        </div>
+    </div>
+
+    <div class="payment-info">
+        <div class="button-container">
+            <button id="proceed-button" type="button">Book Tickets</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let passengerCount = 0;
+        const passengerForms = document.getElementById('passenger-forms');
+        const addPassengerButton = document.getElementById('add-passenger-button');
+        const proceedButton = document.getElementById('proceed-button');
+
+        function addPassengerRow() {
+            if (passengerCount === 0) {
+                passengerForms.style.display = "block";
+            }
+            passengerCount++;
+
+            const newPassengerForm = document.createElement('div');
+            newPassengerForm.className = 'passenger-form';
+            newPassengerForm.innerHTML = `
+                <label>Name:</label>
+                <input type="text" name="name" required>
+                <label>Age:</label>
+                <input type="number" name="age" required>
+                <label>Gender:</label>
+                    <select name="gender" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                <button type="button" class="delete-passenger">Delete</button>
+            `;
+
+            passengerForms.appendChild(newPassengerForm);
+
+            // Add delete event listener
+            newPassengerForm.querySelector('.delete-passenger').addEventListener('click', function() {
+                newPassengerForm.remove();
+                passengerCount--;
+                if (passengerCount === 0) {
+                    passengerForms.style.display = "none";
+                }
+            });
+        }
+
+        addPassengerButton.addEventListener('click', addPassengerRow);
+
+        proceedButton.addEventListener('click', function() {
+            const passengerData = [];
+            document.querySelectorAll('.passenger-form').forEach(form => {
+                const name = form.querySelector('input[name="name"]').value;
+                const age = form.querySelector('input[name="age"]').value;
+                const gender = form.querySelector('select[name="gender"]').value;
+                passengerData.push({ name, age, gender});
+            });
+
+            if (passengerData.length === 0) {
+                alert("Please add at least one passenger.");
+                return;
+            }
+
+            const flightId = document.getElementById('flightId').textContent.trim();
+            const flightNumber = document.getElementById('flightNumber').textContent;
+            const flightSource = document.getElementById('flightSource').textContent;
+            const flightDestination = document.getElementById('flightDestination').textContent;
+            const flightDepartureDate = document.getElementById('flightDepartureDate').textContent;
+            const flightDepartureTime = document.getElementById('flightDepartureTime').textContent;
+            const flightArrivalDate = document.getElementById('flightArrivalDate').textContent;
+            const flightArrivalTime = document.getElementById('flightArrivalTime').textContent;
+            const selectedClass = document.getElementById('selectedClass').textContent;
+
+            // Ensure userEmail is available
+            const userEmailElement = document.getElementById('userEmail');
+            if (!userEmailElement) {
+                alert("User email is missing!");
+                return;
+            }
+            const userEmail = userEmailElement.textContent.trim();
+
+            fetch(`/save-tickets?email=${encodeURIComponent(userEmail)}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    flightId: flightId,
+                    flightNumber: flightNumber,
+                    departure: flightSource,
+                    destination: flightDestination,
+                    departureDate: flightDepartureDate,
+                    departureTime: flightDepartureTime,
+                    arrivalDate: flightArrivalDate,
+                    arrivalTime: flightArrivalTime,
+                    selectedClass: selectedClass,
+                    passengers: passengerData
+                })
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to Book.');
+                }
+            }).then(data => {
+                alert("Book Ticket!");
+                window.location.href = "/dashboard"; // Redirect to payment page
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred.');
+            });
+        });
+    });
+</script>
+</body>
+
+</html>

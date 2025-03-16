@@ -1,0 +1,76 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+}
+
+.welcome {
+    text-align: left;
+    display: flex; /* Added flex to align vertically */
+    align-items: center; /* Vertically center the welcome message */
+}
+
+.logout {
+    text-align: right;
+    display: flex; /* Added flex to align vertically */
+    align-items: center; /* Vertically center the logout button */
+}
+
+.logout-button {
+    padding: 8px 15px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.content {
+    display: flex;
+    padding: 20px;
+}
+
+.add-flight-box { /* Renamed to add-flight-box */
+    width: 16%;
+    margin-right: 20px;
+    border: 1px solid #ddd; /* Added border */
+    padding: 15px; /* Added padding */
+    border-radius: 5px; /* Added border-radius */
+    background-color: #f9f9f9; /* Added background color */
+}
+
+.all-flights {
+    width: 83%; /* Adjust as needed */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+form input, form button {
+    margin-bottom: 10px;
+}

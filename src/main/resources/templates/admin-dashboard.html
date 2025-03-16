@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admin-dashboard.css">
+</head>
+<body>
+<div class="header">
+    <div class="welcome">
+        <h3>Welcome, <span th:text="${username}"></span></h3>
+    </div>
+    <div class="logout">
+        <a href="/logout" class="logout-button">Logout</a>
+    </div>
+</div>
+
+<div class="content">
+    <div class="add-flight-box">
+        <h3>Add Flight</h3>
+        <form action="/add-flight" method="post">
+            <label>Flight Number:</label>
+            <input type="text" name="flightNumber" required><br>
+
+            <label>Origin:</label>
+            <input type="text" name="origin" required><br>
+
+            <label>Destination:</label>
+            <input type="text" name="destination" required><br>
+
+            <label>Departure Date & Time:</label>
+            <input type="date" name="departureDate" required> <input type="time" name="departureTime" required><br>
+
+            <label>Arrival Date & Time:</label>
+            <input type="date" name="arrivalDate" required> <input type="time" name="arrivalTime" required><br>
+
+            <label>Economy Class Price:</label>
+            <input type="number" name="economyClassPrice" required><br>
+            <label>Economy Class Seats:</label>
+            <input type="number" name="economySeats" required><br>
+
+            <label>Business Class Price:</label>
+            <input type="number" name="businessClassPrice" required><br>
+            <label>Business Class Seats:</label>
+            <input type="number" name="businessSeats" required><br>
+
+            <label>First Class Price:</label>
+            <input type="number" name="firstClassPrice" required><br>
+            <label>First Class Seats:</label>
+            <input type="number" name="firstClassSeats" required><br>
+
+            <button type="submit">Add Flight</button>
+        </form>
+    </div>
+
+    <div class="all-flights">
+        <h3>All Flights</h3>
+        <table border="1">
+            <tr>
+                <th>Flight Number</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Departure Date</th>
+                <th>Departure Time</th>
+                <th>Arrival Date</th>
+                <th>Arrival Time</th>
+                <th>Economy Price</th>
+                <th>Economy Seats</th>
+                <th>Business Price</th>
+                <th>Business Seats</th>
+                <th>First Class Price</th>
+                <th>First Class Seats</th>
+            </tr>
+            <tr th:each="flight : ${flights}">
+                <td th:text="${flight.flightNumber}"></td>
+                <td th:text="${flight.origin}"></td>
+                <td th:text="${flight.destination}"></td>
+                <td th:text="${flight.departureDate}"></td>
+                <td th:text="${flight.departureTime}"></td>
+                <td th:text="${flight.arrivalDate}"></td>
+                <td th:text="${flight.arrivalTime}"></td>
+                <td th:text="${flight.economyClassPrice}"></td>
+                <td th:text="${flight.businessClassPrice}"></td>
+                <td th:text="${flight.firstClassPrice}"></td>
+<!--                <td th:text="${flight.economySeats}"></td>-->
+<!--                <td th:text="${flight.businessSeats}"></td>-->
+<!--                <td th:text="${flight.firstClassSeats}"></td>-->
+                <td th:text="${#lists.size(flight.economySeats)}"></td>
+                <td th:text="${#lists.size(flight.businessSeats)}"></td>
+                <td th:text="${#lists.size(flight.firstClassSeats)}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

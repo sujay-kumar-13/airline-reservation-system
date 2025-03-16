@@ -1,0 +1,82 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.search-flight-details-container {
+    width: 90%;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.flight-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.flight-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+}
+
+.flight-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.left-details,
+.middle-details,
+.right-details {
+    text-align: center;
+}
+
+.left-details {
+    text-align: left;
+}
+
+.right-details {
+    text-align: right;
+}
+
+.flight-details {
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.class-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Three columns for classes */
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.class-option {
+    margin-bottom: 0;
+    text-align: center;
+    border: 1px solid #eee; /* Add border to each class option */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.book-button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto 0;
+}
+
+label {
+    display: block;
+}

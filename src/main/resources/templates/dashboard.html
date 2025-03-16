@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<div class="header">
+    <div class="welcome">
+        <h3>Welcome, <span th:text="${username}"></span>!</h3>
+    </div>
+    <div class="logout">
+        <a href="/logout" class="logout-button">Logout</a>
+    </div>
+</div>
+
+<div class="content">
+    <!-- Search Flights Section -->
+    <div class="search-flights-box">
+        <h3>Search Flights</h3>
+        <form action="/search-flights" method="post">
+            <label>From :</label>
+            <input type="text" name="origin" required>
+
+            <label>To :</label>
+            <input type="text" name="destination" required>
+
+            <label>Departure Date:</label>
+            <input type="date" name="departureDate" required><br>
+
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <!-- Flight Details Section -->
+    <div class="flight-details">
+
+        <!-- Upcoming Flights -->
+        <div class="upcoming-flights">
+            <h3>Upcoming Flights</h3>
+
+            <div th:if="${upcomingTickets == null or upcomingTickets.isEmpty()}">No upcoming flights</div>
+
+            <div class="ticket-container">
+                <div class="ticket-card" th:each="ticket : ${upcomingTickets}" th:attr="data-href=@{/ticket-info(ticketId=${ticket.id})}" onclick="redirectToTicket(this)">
+                    <div class="ticket-header">
+                        <span th:text="${ticket.departure}"></span> → <span th:text="${ticket.destination}"></span>
+                    </div>
+                    <div class="ticket-details">
+                        <p>Flight: <span th:text="${ticket.flightNumber}"></span></p>
+                    </div>
+                    <div class="ticket-date-time">
+                        Departure: <span th:text="${ticket.departureDate}"></span>, <span th:text="${ticket.departureTime}"></span>
+                    </div>
+                    <div class="ticket-details">
+                        <p>Class: <span th:text="${ticket.selectedClass}"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function redirectToTicket(element) {
+                    window.location.href = element.getAttribute("data-href");
+                }
+            </script>
+
+
+
+        </div>
+
+        <!-- Past Flights -->
+        <div class="past-flights">
+            <h3>Past Flights</h3>
+
+            <div th:if="${pastTickets == null or pastTickets.isEmpty()}">No past flights</div>
+
+            <div class="ticket-container">
+                <div class="ticket-card" th:each="ticket : ${pastTickets}">
+                    <!--                     th:onclick="|window.location.href='/ticket-info/${ticket.id}'|">-->
+                    <div class="ticket-header">
+                        <span th:text="${ticket.departure}"></span> →
+                        <span th:text="${ticket.destination}"></span>
+                    </div>
+                    <div class="ticket-details">
+                        <p>Flight: <span th:text="${ticket.flightNumber}"></span></p>
+                        <!--                        <p>Airline: <span th:text="${ticket.airline}"></span></p>-->
+                    </div>
+                    <div class="ticket-date-time">
+                        Departure: <span th:text="${ticket.departureDate}"></span>,
+                        <span th:text="${ticket.departureTime}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
