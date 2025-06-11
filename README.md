@@ -30,12 +30,11 @@ Ensure you have the following installed:
 - **Maven**
 - **MongoDB** (Running locally or cloud instance)
 - **Spring Boot**
-- **Node.js** (Optional, if using additional frontend frameworks like React/Vue)
 
 ### Backend Setup
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/airline-reservation.git
+   git clone https://github.com/sujay-kumar-13/airline-reservation-system.git
    cd airline-reservation
    ```
 2. Configure MongoDB in `application.properties`:
